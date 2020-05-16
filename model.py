@@ -1,4 +1,4 @@
-# Install the library using pip: pip install sentence-transformers
+# Install the library using pip: pip install sentence-transformers & pip install scipy
 
 """## Load the BERT Model"""
 from sentence_transformers import SentenceTransformer
@@ -42,4 +42,4 @@ for query, query_embedding in zip(queries, query_embeddings):
     print("\nTop 5 most similar jobs in corpus:")
 
     for idx, distance in results[0:number_top_matches]:
-        print(sentences[idx].strip(), "(Similarity: %.4f)" % (1-distance))
+        print(jobs[idx].strip(), "(Similarity: %.4f)" % (1-distance))
