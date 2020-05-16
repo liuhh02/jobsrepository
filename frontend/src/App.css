@@ -1,16 +1,20 @@
-.App {
+.App-container {
   text-align: center;
+  padding: 0 !important;
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 30vmin;
+  margin-bottom: 20px;
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Landing Page CSS*/
+
+.landing {
+  height: 100vh;
+  transition: width 0.5s 0.5s, height 0.5s 0.5s, opacity 0.5s;
+  width: 100vw
 }
 
 .App-header {
@@ -24,15 +28,107 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.title {
+  padding-bottom: 15vh;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.arrow {
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+
+.arrow span{
+  display: block;
+  width: 30px;
+  height: 30px;
+  border-bottom: 5px solid #ff892b;
+  border-right: 5px solid #FF892B;
+  transform: rotate(45deg);
+  margin: -10px;
+  animation: animate 2s infinite;
+}
+.arrow span:nth-child(2){
+  animation-delay: -0.2s;
+}
+.arrow span:nth-child(3){
+  animation-delay: -0.4s;
+}
+@keyframes animate {
+  0%{
+    opacity: 0;
+    transform: rotate(45deg) translate(-20px,-20px);
   }
-  to {
-    transform: rotate(360deg);
+  50%{
+    opacity: 1;
+  }
+  100%{
+    opacity: 0;
+    transform: rotate(45deg) translate(20px,20px);
   }
 }
+
+.wave {
+  width: 100vw;
+  height: 100px;
+  position: absolute;
+  top: 100%
+}
+
+/* Content Page CSS*/
+
+.content {
+  display: flex;
+  flex-direction: row;
+  height: 70vh;
+  padding-top: 100px
+}
+
+/* Drop Page CSS*/
+
+.drop {
+  flex: 2;
+  height: 70vh;
+  border-right: black 3px dashed;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.dropzone {
+  height: 280px;
+  width: 90%;
+  margin: 20px 10px 10px 10px;
+  background-color: #eee;
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='100' ry='100' stroke='%23EC3463' stroke-width='7' stroke-dasharray='31%2c 30%2c 33' stroke-dashoffset='81' stroke-linecap='butt'/%3e%3c/svg%3e");
+  border-radius: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  padding: 20px
+}
+
+.drop-inside {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-overflow: ellipsis;
+  overflow: hidden
+}
+
+.jobs {
+  flex: 3;
+  height: 70vh;
+}
+
+.fade {
+  position: relative; 
+    bottom: 4em;
+    height: 4em;
+}
+
+::-webkit-scrollbar { display: none !important }
