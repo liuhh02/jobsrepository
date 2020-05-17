@@ -75,7 +75,6 @@ def getlines(fname):
         textdict[i] = textline(value)
     return textdict
 
-
 class textline():
     def __init__(self, line):
         self.og = line
@@ -92,50 +91,42 @@ class textline():
             total_characters += 1
             self.string += char.get_text()
         self.avgsize = round((totalsize / total_characters)*2)/2
-        newstr = self.string.replace("\n", " ").encode('utf-8').replace(b'\xe2\x80\x8b', b" ").decode('utf-8')
+        newstr = self.string.replace("\n", " ").replace('- ', " ").encode('utf-8').replace(b'\xe2\x80\x8b', b" ").replace(b'\xef\x82\xb7', b' ').replace(b'\xe2\x80\x93', b' ').decode('utf-8')
+        #print(newstr[10:15].encode('utf-8'))
         if newstr.isspace():
             self.string = False
         else:
-            self.string = newstr
+            self.string = newstr.strip()
         self.font = max(fontlist, key=Counter(fontlist).get)
+
+def organize(lns):
+    sorted = []
+    start = None
+    startbold = False
+    startsize = 0
+    for branch, line in lns.items():
+        if line.string is not False:
+            if 'skill' in line.string.lower() or 'certific' in line.string.lower():
+                start = branch
+                startsize = line.avgsize
+                if 'bold' in line.font.lower():
+                    startbold = True
+            else:
+                if start is not None and branch >= start:
+                    if line.avgsize < startsize or (startbold and not 'bold' in line.font.lower()):
+                        sorted.append(line.string)
+                    else:
+                        start = None
+    return sorted
+                
+
 
 def sections(fname):
     lines = getlines(fname)
-    sorted = {}
-    cpar = 0
-    for branch, line in lines.items():
-        if line.string is not False:
-            if 'bold' in line.font.lower():
-                try:
-                    if line.avgsize >= sorted[cpar][0].avgsize:
-                        sorted[branch] = [line, []]
-                        cpar = branch
-                    else:
-                        sorted[cpar][1].append({branch: line})
-                except KeyError:
-                    sorted[branch] = [line, []]
-                    cpar = branch
-    return sorted, printable(sorted)
-
-def printable(lst):
-    prntable = {}
-    for key, value in lst.items():
-        if isinstance(value, list):
-            newlist = []
-            for i in value:
-                if isinstance(i, textline):
-                    newlist.append(i.string)
-                else:
-                    for x in i:
-                        print(x)
-                        newlist.append(printable(x))
-            prntable[key] = newlist
-        else:
-            prntable[key] = value.string
-    return prntable
+    return organize(lines)
 
 def gettxt(fname):
-    full, pretty = sections(fname)
+    pretty = sections(fname)
     text_output = pdf_to_text(fname)
     text1_output = text_output.decode("utf-8")
     return json.dumps(pretty, indent=4)

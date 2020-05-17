@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 from pdfminer.pdfparser import PDFParser
 from pdfminer.pdfdocument import PDFDocument
 from pdfhandler import gettxt
+import json
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'docx', 'doc', 'rtf'}
 
@@ -33,7 +34,12 @@ def upload_file():
             file_path = 'uploads/{}'.format(secure_filename(file.filename))
             file.save(file_path)
             if createPDFDoc(file_path):
-                return gettxt(file_path)
+                data = gettxt(file_path)
+                if len(json.loads(data)) > 0:
+                    # do some ml thing with data
+                    return data
+                else:
+                    return "Couldn't find any skills or certifications on your resume, sorry"
             else:
                 return 'No extractrable text found.'
     else:
