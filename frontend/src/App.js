@@ -1,22 +1,53 @@
 import React, { Component } from 'react';
 import logo from './assets/logo.png';
 import wave from './assets/wave.png';
+import arrow from './assets/arrow.png';
 import './App.css';
 import Dropzone from 'react-dropzone';
-import { Container, InputGroup, FormControl, Button } from 'react-bootstrap'
-import { FaBriefcase } from 'react-icons/fa'
+import { Container, InputGroup, FormControl, Button, Table } from 'react-bootstrap';
+import { Document, Page } from 'react-pdf';
+import PDFViewer from 'pdf-viewer-reactjs';
 
 class App extends Component {
 
   state = {
     file: '',
-    selected: 'None'
+    selected: 'None',
+    pdf: '',
+    jobs: [
+      { title: 'Wannabe Rockstar', description: 'IF YOU ARE A TIER 1 BUFFOON, PLEASE APPLY' },
+      { title: 'Gamer', description: 'Just bring a soda.' },
+      { title: 'Brogrammer', description: 'Hey bruh, wanna write some jUiCy coDe?' },
+      { title: 'McDonalds employee', description: 'No, our chicken nuggets are NOT chicken! Learn more secrets in this unbelievably boring job.' },
+      { title: 'T-shirt man', description: 'Need a PhD in fashion for this, please :D' },
+      { title: 'Wannabe Rockstar', description: 'IF YOU ARE A TIER 1 BUFFOON, PLEASE APPLY' },
+      { title: 'Gamer', description: 'Just bring a soda.' },
+      { title: 'Brogrammer', description: 'Hey bruh, wanna write some jUiCy coDe?' },
+      { title: 'McDonalds employee', description: 'No, our chicken nuggets are NOT chicken! Learn more secrets in this unbelievably boring job.' },
+      { title: 'T-shirt man', description: 'Need a PhD in fashion for this, please :D' },
+      { title: 'Wannabe Rockstar', description: 'IF YOU ARE A TIER 1 BUFFOON, PLEASE APPLY' },
+      { title: 'Gamer', description: 'Just bring a soda.' },
+      { title: 'Brogrammer', description: 'Hey bruh, wanna write some jUiCy coDe?' },
+      { title: 'McDonalds employee', description: 'No, our chicken nuggets are NOT chicken! Learn more secrets in this unbelievably boring job.' },
+      { title: 'T-shirt man', description: 'Need a PhD in fashion for this, please :D' },
+      { title: 'Wannabe Rockstar', description: 'IF YOU ARE A TIER 1 BUFFOON, PLEASE APPLY' },
+      { title: 'Gamer', description: 'Just bring a soda.' },
+      { title: 'Brogrammer', description: 'Hey bruh, wanna write some jUiCy coDe?' },
+      { title: 'McDonalds employee', description: 'No, our chicken nuggets are NOT chicken! Learn more secrets in this unbelievably boring job.' },
+      { title: 'T-shirt man', description: 'Need a PhD in fashion for this, please :D' },
+    ]
   }
 
   processPdf = files => {
     const file = files[0]
     if(file.name.includes(".pdf")) {
-      console.log(file)
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const uint = new Uint8Array(event.target.result)
+        this.setState({ pdf: uint })
+        console.log(this.state.pdf);
+      };
+      const base64 = reader.readAsArrayBuffer(file);  
       this.setState({ file, selected: file.name })
     }
   }
@@ -27,7 +58,7 @@ class App extends Component {
         <div className="App-header">
           <div className="title">
             <img src={logo} className="App-logo" alt="logo" />
-            <p>
+            <p style={{ color: 'white' }}>
               Find your next job with the power of NLP!
             </p>
           </div>
@@ -40,29 +71,6 @@ class App extends Component {
         </div>
         <div className="content">
           <div className="drop">
-            <InputGroup className="mb-3" style={{ width: '30vw', paddingLeft: '30px' }}>
-              <InputGroup.Prepend>
-                <InputGroup.Text id="basic-addon2"><FaBriefcase size={22} /></InputGroup.Text>
-              </InputGroup.Prepend>
-              <FormControl
-                placeholder="Job Title"
-                aria-label="Job Title"
-                aria-describedby="basic-addon1"
-                inputRef={node => this.title = node}
-              />
-            </InputGroup>
-            <InputGroup className="mb-3" style={{ width: '30vw', paddingLeft: '30px' }}>
-              <InputGroup.Prepend>
-                <InputGroup.Text id="basic-addon2"><FaBriefcase size={22} /></InputGroup.Text>
-              </InputGroup.Prepend>
-              <FormControl
-                placeholder="Zip Code"
-                aria-label="Zip Code"
-                aria-describedby="basic-addon1"
-                inputRef={node => this.zip = node}
-              />
-            </InputGroup>
-
             <Dropzone onDrop={acceptedFiles => this.processPdf(acceptedFiles)}>
               {({getRootProps, getInputProps}) => (
                 <section className="dropzone">
@@ -76,11 +84,30 @@ class App extends Component {
                 </section>
               )}
             </Dropzone>
-            <Button variant="primary" size="lg" active style={{ alignSelf: 'center', marginTop: '10px' }}>
+            <Button variant="primary" size="lg" active style={{ alignSelf: 'center' }}>
               Submit
             </Button>
           </div>
+          <img src={arrow} style={{ flex: 0.7, height: '170px', alignSelf: 'center' }}/>
           <div className="jobs">
+            <Table striped bordered hover className="table">
+              <thead>
+                <th>#</th>
+                <th>Job Title</th>
+                <th>Job Description</th>
+              </thead>
+              <tbody>
+                {
+                  this.state.jobs.map((job, i) => (
+                    <tr>
+                      <td>{i + 1}</td>
+                      <td>{job.title}</td>
+                      <td>{job.description}</td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </Table>
           </div>
         </div>
       </Container>
