@@ -33,9 +33,9 @@ data['Query'] = data['Query'].apply(clean_text)
 
 # The maximum number of words to be used. (most frequent)
 MAX_NB_WORDS = 50000
-# Max number of words in each complaint.
+# Max number of words in each resume.
 MAX_SEQUENCE_LENGTH = 250
-# This is fixed.
+# Dimension of Embedding.
 EMBEDDING_DIM = 100
 
 tokenizer = Tokenizer(num_words=MAX_NB_WORDS, filters='!"#$%&()*+,-./:;<=>?@[\]^_`{|}~', lower=True)
