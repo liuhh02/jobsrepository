@@ -25,7 +25,8 @@ def search_jobs(query, country_code="us", num_results=5):
         jobs.append(
             {
                 "title": job["title"],
-                "description": job["description"]
+                "description": job["description"],
+                "link": job["redirect_url"]
             }
         )
     return jobs
