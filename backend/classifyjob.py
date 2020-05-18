@@ -1,4 +1,5 @@
-from keras.models import Sequential, load_model
+from keras.models import Sequential
+from tensorflow.keras.models import load_model
 from keras.layers import Embedding, LSTM, SpatialDropout1D, Bidirectional
 from keras.layers.core import Dense
 from keras.preprocessing.text import Tokenizer
