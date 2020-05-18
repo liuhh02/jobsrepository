@@ -12,16 +12,17 @@ import nltk
 from nltk.corpus import stopwords
 nltk.download('stopwords')
 STOPWORDS = set(stopwords.words('english'))
-from sklearn.preprocessing import LabelBinarizer
+import pickle
+
+def clean_text(text):
+	text = text.lower()
+	# use regex to clean up html tags
+	cleanr = re.compile('<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});')
+	text = re.sub(cleanr, '', text)
+	text = ' '.join(word for word in text.split() if word not in STOPWORDS) # remove stopwors from text
+	return text
 
 def classifyjob(resume):
-	def clean_text(text):
-	    text = text.lower()
-	    # use regex to clean up html tags
-	    cleanr = re.compile('<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});')
-	    text = re.sub(cleanr, '', text)
-	    text = ' '.join(word for word in text.split() if word not in STOPWORDS) # remove stopwors from text
-	    return text
 	data = pd.read_csv('./Top30.csv')
 	data = data.reset_index(drop=True)
 	data['Description'] = data['Description'].apply(clean_text)
@@ -34,16 +35,9 @@ def classifyjob(resume):
 	EMBEDDING_DIM = 100
 	tokenizer = Tokenizer(num_words=MAX_NB_WORDS, filters='!"#$%&()*+,-./:;<=>?@[\]^_`{|}~', lower=True)
 	tokenizer.fit_on_texts(data['Description'].values)
-	word_index = tokenizer.word_index
-	print('Found %s unique tokens.' % len(word_index))
 
-	labelbinarizer = LabelBinarizer()
-	make_encoded_results = labelbinarizer.fit_transform(data['Query'])
-	df_make_encoded = pd.DataFrame(make_encoded_results, columns=labelbinarizer.classes_)
-
-	a = []
-	for label in labels:
-	    a.append(str(label))
+	with open("jobcategories.txt", "rb") as fp:
+        jobcategories = pickle.load(fp)
 
 	model = load_model('./lstm_model.h5')
 
@@ -53,4 +47,4 @@ def classifyjob(resume):
 	text_sequences = pad_sequences(text_sequences, maxlen=MAX_SEQUENCE_LENGTH)
 	pred = model.predict(text_sequences)
 	# returns the job 5 titles to search on LinkedIn
-	return a[np.argmax(pred)]
+	return jobcategories[np.argmax(pred)]
