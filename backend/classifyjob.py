@@ -14,15 +14,14 @@ nltk.download('stopwords')
 STOPWORDS = set(stopwords.words('english'))
 from sklearn.preprocessing import LabelBinarizer
 
-def clean_text(text):
-    text = text.lower()
-    # use regex to clean up html tags
-    cleanr = re.compile('<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});')
-    text = re.sub(cleanr, '', text)
-    text = ' '.join(word for word in text.split() if word not in STOPWORDS) # remove stopwors from text
-    return text
-
 def classifyjob(resume):
+	def clean_text(text):
+	    text = text.lower()
+	    # use regex to clean up html tags
+	    cleanr = re.compile('<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});')
+	    text = re.sub(cleanr, '', text)
+	    text = ' '.join(word for word in text.split() if word not in STOPWORDS) # remove stopwors from text
+	    return text
 	data = pd.read_csv('./Top30.csv')
 	data = data.reset_index(drop=True)
 	data['Description'] = data['Description'].apply(clean_text)
