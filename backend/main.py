@@ -5,6 +5,8 @@ from pdfminer.pdfparser import PDFParser
 from pdfminer.pdfdocument import PDFDocument
 from pdfhandler import gettxt
 import json
+from classifyjob import clean_text, classifyjob
+
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'docx', 'doc', 'rtf'}
 
@@ -36,8 +38,7 @@ def upload_file():
             if createPDFDoc(file_path):
                 data = gettxt(file_path)
                 if len(json.loads(data)) > 0:
-                    # do some ml thing with data
-                    return data
+                    return classifyjob(data)
                 else:
                     return "Couldn't find any skills or certifications on your resume, sorry"
             else:
