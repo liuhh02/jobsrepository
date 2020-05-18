@@ -35,8 +35,10 @@ def upload_file():
             file.save(file_path)
             if createPDFDoc(file_path):
                 data = gettxt(file_path)
-                if len(json.loads(data)) > 0:
+                if len(data) > 0:
                     # do some ml thing with data
+                    # for title in getTitles(data):
+                    # 
                     return data
                 else:
                     return "Couldn't find any skills or certifications on your resume, sorry"

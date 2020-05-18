@@ -100,7 +100,7 @@ class textline():
         self.font = max(fontlist, key=Counter(fontlist).get)
 
 def organize(lns):
-    sorted = []
+    sorted = ""
     start = None
     startbold = False
     startsize = 0
@@ -114,7 +114,7 @@ def organize(lns):
             else:
                 if start is not None and branch >= start:
                     if line.avgsize < startsize or (startbold and not 'bold' in line.font.lower()):
-                        sorted.append(line.string)
+                        sorted += line.string
                     else:
                         start = None
     return sorted
@@ -129,4 +129,4 @@ def gettxt(fname):
     pretty = sections(fname)
     text_output = pdf_to_text(fname)
     text1_output = text_output.decode("utf-8")
-    return json.dumps(pretty, indent=4)
+    return pretty
