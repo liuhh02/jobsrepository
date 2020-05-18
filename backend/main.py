@@ -5,6 +5,10 @@ from pdfminer.pdfparser import PDFParser
 from pdfminer.pdfdocument import PDFDocument
 from pdfhandler import gettxt
 import json
+from classifyjob import classifyjob, clean_text
+import pandas as pd
+from jobs_connect import search_jobs
+from similarity import calculate_similarity, find_similarity
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'docx', 'doc', 'rtf'}
 
@@ -35,17 +39,21 @@ def upload_file():
             file.save(file_path)
             if createPDFDoc(file_path):
                 data = gettxt(file_path)
-                if len(data) > 0:
-                    # do some ml thing with data
-                    # for title in getTitles(data):
-                    # 
-                    return data
+                if len(json.loads(data)) > 0:
+                    job_title = classifyjob(data)
+                    jobs = search_jobs(job_title)
+                    df = pd.DataFrame(jobs)
+                    df['title'] = df['title'].apply(clean_html)
+                    df['description'] = df['description'].apply(clean_html)
+                    jobs_dict = find_similarity(df, data)
+                    return jobs_dict
+
                 else:
                     return "Couldn't find any skills or certifications on your resume, sorry"
             else:
                 return 'No extractrable text found.'
     else:
-        return render_template('index.html')
+        return redirect('http://resumatch.online')
 		
 if __name__ == '__main__':
    app.run(debug = True)
