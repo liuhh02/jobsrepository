@@ -10,10 +10,12 @@ import pandas as pd
 from jobs_connect import search_jobs
 from similarity import calculate_similarity, find_similarity
 import re
+from flask_cors import CORS, cross_origin
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'docx', 'doc', 'rtf'}
 
 app = Flask(__name__)
+cors = CORS(app)
 
 def clean_html(text):
     cleanr = re.compile('<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});')
@@ -31,6 +33,7 @@ def createPDFDoc(fpath):
     return document.is_extractable
 	
 @app.route('/upload', methods = ['GET', 'POST'])
+@cross_origin()
 def upload_file():
     if request.method == 'POST':
         if 'file' not in request.files:
