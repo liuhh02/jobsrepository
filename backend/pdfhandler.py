@@ -129,4 +129,4 @@ def gettxt(fname):
     pretty = sections(fname)
     text_output = pdf_to_text(fname)
     text1_output = text_output.decode("utf-8")
-    return pretty
+    return json.dumps(pretty)

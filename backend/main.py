@@ -9,6 +9,7 @@ from classifyjob import classifyjob, clean_text
 import pandas as pd
 from jobs_connect import search_jobs
 from similarity import calculate_similarity, find_similarity
+import re
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'docx', 'doc', 'rtf'}
 
@@ -61,4 +62,4 @@ def upload_file():
         return redirect('http://resumatch.online')
 		
 if __name__ == '__main__':
-   app.run(debug = True)
+   app.run(debug = True, threaded=False)
