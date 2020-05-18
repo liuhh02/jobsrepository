@@ -37,7 +37,7 @@ def classifyjob(resume):
 	tokenizer.fit_on_texts(data['Description'].values)
 
 	with open("jobcategories.txt", "rb") as fp:
-        jobcategories = pickle.load(fp)
+		jobcategories = pickle.load(fp)
 
 	model = load_model('./lstm_model.h5')
 
