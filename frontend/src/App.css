@@ -30,8 +30,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.name {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  letter-spacing: 4px;
+  font-size: 50px;
+  color: orange;
 }
 
 .title {
@@ -108,7 +114,7 @@
 }
 
 .dropzone {
-  height: 280px;
+  height: 400px;
   width: 90%;
   margin: 20px 10px 10px 10px;
   background-color: #eee;
