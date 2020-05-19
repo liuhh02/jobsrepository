@@ -70,9 +70,18 @@ def getlines(fname):
                     textlines.append(lines)
             elif isinstance(lt_obj, LTTextLine):
                 textlines.append(lt_obj)
+            elif isinstance(lt_obj, LTFigure):
+                for x in lt_obj:
+                    if isinstance(x, LTTextBox):
+                        for lines in x:
+                            textlines.append(lines)
+                    elif isinstance(x, LTTextLine):
+                        textlines.append(x)
     textdict = {}
     for i, value in enumerate(textlines):
         textdict[i] = textline(value)
+    if not bool(textdict):
+        return 'GOTO STRING SORT'
     return textdict
 
 class textline():
@@ -91,7 +100,7 @@ class textline():
             total_characters += 1
             self.string += char.get_text()
         self.avgsize = round((totalsize / total_characters)*2)/2
-        newstr = self.string.replace("\n", " ").replace('- ', " ").encode('utf-8').replace(b'\xe2\x80\x8b', b" ").replace(b'\xef\x82\xb7', b' ').replace(b'\xe2\x80\x93', b' ').decode('utf-8')
+        newstr = self.string.replace("\n", " ").replace('- ', " ").encode('utf-8').replace(b'\xe2\x80\x8b', b" ").replace(b'\xe2\x80\xa2', b" ").replace(b'\xef\x82\xb7', b' ').replace(b'\xe2\x80\x93', b' ').decode('utf-8')
         #print(newstr[10:15].encode('utf-8'))
         if newstr.isspace():
             self.string = False
@@ -123,10 +132,25 @@ def organize(lns):
 
 def sections(fname):
     lines = getlines(fname)
+    if lines == 'GOTO STRING SORT':
+        text_output = pdf_to_text(fname)
+        text1_output = text_output.decode("utf-8")
+        ans = text1_output.lower().replace('- ', "").encode('utf-8').replace(b'\xe2\x80\x8b', b"").replace(b'\xe2\x80\xa2', b"").replace(b'\xef\x82\xb7', b'').replace(b'\xe2\x80\x93', b'').decode('utf-8').split('\n')
+        skills = ""
+        contto = 0
+        i = 0
+        for x in ans:
+            if not x.isspace() and x != '\n' and x != '':
+                if 'skill' in x or 'certific' in x:
+                    skills += (x)
+                    contto = i + 6
+                elif i < contto:
+                    skills += (x)
+                i += 1
+        return(skills)
+
     return organize(lines)
 
 def gettxt(fname):
     pretty = sections(fname)
-    text_output = pdf_to_text(fname)
-    text1_output = text_output.decode("utf-8")
     return json.dumps(pretty)
