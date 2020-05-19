@@ -12,17 +12,13 @@ class App extends Component {
 
   processPdf = files => {
     const file = files[0]
-    console.log(file)
-    const form = new FormData();
+    var form = new FormData();
     form.append('file', file, file.name)
+    console.log(form.entries())
     this.setState({ submit: 'loading' })
     fetch('http://resumatch.andrechek.com/upload', {
       method: 'POST',
-      body: form,
-      headers: {
-        'Content-type': 'application/x-www-form-urlencoded',
-        'Access-Control-Allow-Origin': '*',
-      }
+      body: form
     })
     .then(res => res.text())
     .then(res => {
