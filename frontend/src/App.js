@@ -24,7 +24,7 @@ class App extends Component {
     form.append('file', file, file.name)
     console.log(form.entries())
     this.setState({ submit: 'loading' })
-    fetch('http://resumatch.andrechek.com/upload', {
+    fetch('https://resumatch.andrechek.com/upload', {
       method: 'POST',
       body: form
     })
