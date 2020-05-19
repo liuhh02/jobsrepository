@@ -1,2 +1,2 @@
 # jobsrepository
-Download the training csv Top30.csv [here](https://drive.google.com/file/d/1HN6I55KkYbIwap4R5KWaoBuqcFGft42U/view?usp=sharing) and place it under the folder backend to run the code.
+Our application allows users to simply drag-n-drop their .pdf resume onto our site. From there, our NLP model will tag its soft skills, search for jobs that use those skills in a massive dataset of jobs, and then recommend those jobs to those employees according to their fit.
