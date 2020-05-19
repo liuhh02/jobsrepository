@@ -36,6 +36,7 @@ def createPDFDoc(fpath):
 @cross_origin()
 def upload_file():
     if request.method == 'POST':
+        print(request.files)
         if 'file' not in request.files:
             return 'No file part'
         file = request.files['file']
