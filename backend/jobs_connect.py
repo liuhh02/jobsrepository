@@ -9,7 +9,7 @@ def search_jobs(query, country_code="us", num_results=5):
         country_code (str):
             one of at, au, br, ca, de, fr, gb, in, it, nl, nz, pl, ru, sg, us, za
 
-        query (str):
+        query (list of str):
             what to search the job api for
 
         num_results (int):
@@ -17,20 +17,20 @@ def search_jobs(query, country_code="us", num_results=5):
 
     Returns: list of dicts
     '''
-    response = requests.post("http://api.adzuna.com/v1/api/jobs/%s/search/1?app_id=%s&app_key=%s&results_per_page=%d&what=%s&content-type=application/json" 
-        % (country_code, app_id, app_key, num_results, query.replace(" ", "-"))).json()
-
     jobs = []
-    for job in response['results']:
-        jobs.append(
-            {
-                "title": job["title"],
-                "description": job["description"],
-                "link": job["redirect_url"]
-            }
-        )
+    for jobtitle in query:
+        response = requests.post("http://api.adzuna.com/v1/api/jobs/%s/search/1?app_id=%s&app_key=%s&results_per_page=%d&what=%s&content-type=application/json" 
+        % (country_code, app_id, app_key, num_results, jobtitle.replace(" ", "-"))).json()
+    
+        for job in response['results']:
+            jobs.append(
+                {
+                    "title": job["title"],
+                    "description": job["description"],
+                    "link": job["redirect_url"]
+                }
+            )
     return jobs
-
 
 '''
 Below is a sample response.

@@ -5,17 +5,30 @@ from pdfminer.pdfparser import PDFParser
 from pdfminer.pdfdocument import PDFDocument
 from pdfhandler import gettxt
 import json
+from tensorflow.keras.models import load_model
 from classifyjob import classifyjob, clean_text
+from sentence_transformers import SentenceTransformer
 import pandas as pd
 from jobs_connect import search_jobs
 from similarity import calculate_similarity, find_similarity
 import re
 from flask_cors import CORS, cross_origin
+import pickle
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'docx', 'doc', 'rtf'}
 
 app = Flask(__name__)
 cors = CORS(app)
+# loading classification ML models
+model = load_model('./lstm_model.h5')
+with open('tokenizer.pickle', 'rb') as handle:
+    tokenizer = pickle.load(handle)
+with open("jobcategories.txt", "rb") as fp:
+	jobcategories = pickle.load(fp)
+        
+# loading similarity ML model
+model2 = SentenceTransformer('bert-base-nli-mean-tokens')
+    
 
 def clean_html(text):
     cleanr = re.compile('<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});')
@@ -36,6 +49,7 @@ def createPDFDoc(fpath):
 @cross_origin()
 def upload_file():
     if request.method == 'POST':
+        global model
         print(request.files)
         if 'file' not in request.files:
             return 'No file part'
@@ -50,12 +64,12 @@ def upload_file():
             if createPDFDoc(file_path):
                 data = gettxt(file_path)
                 if len(json.loads(data)) > 0:
-                    job_title = classifyjob(data)
+                    job_title = classifyjob(data, jobcategories, tokenizer, model)
                     jobs = search_jobs(job_title)
                     df = pd.DataFrame(jobs)
                     df['title'] = df['title'].apply(clean_html)
                     df['description'] = df['description'].apply(clean_html)
-                    jobs_dict = find_similarity(df, data)
+                    jobs_dict = find_similarity(df, data, model2)
                     return jsonify(jobs_dict)
 
                 else:
@@ -66,4 +80,4 @@ def upload_file():
         return redirect('http://resumatch.online')
 		
 if __name__ == '__main__':
-   app.run(debug = True, threaded=False)
+    app.run(debug = True, threaded=False)
