@@ -1,5 +1,3 @@
-"""## Load the BERT Model"""
-from sentence_transformers import SentenceTransformer
 import scipy
 import pandas as pd
 
@@ -8,7 +6,7 @@ def calculate_similarity(job_embeddings, resume_embeddings):
     similarity = 1-distance[0]
     return similarity
 
-def find_similarity(jobs, resume):
+def find_similarity(jobs, resume, model):
     '''
     Parameters
         jobs (pd.DataFrame):
@@ -19,7 +17,6 @@ def find_similarity(jobs, resume):
 
     Returns: list of dicts
     '''
-    model = SentenceTransformer('bert-base-nli-mean-tokens')
 	# Each sentence is encoded as a 1-D vector with 78 columns
     resume_info = [resume]
     resume_embeddings = model.encode(resume_info)
