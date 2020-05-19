@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, redirect, url_for, render_template
+from flask import Flask, request, redirect, url_for, render_template, jsonify
 from werkzeug.utils import secure_filename
 from pdfminer.pdfparser import PDFParser
 from pdfminer.pdfdocument import PDFDocument
@@ -55,7 +55,7 @@ def upload_file():
                     df['title'] = df['title'].apply(clean_html)
                     df['description'] = df['description'].apply(clean_html)
                     jobs_dict = find_similarity(df, data)
-                    return jobs_dict
+                    return jsonify(jobs_dict)
 
                 else:
                     return "Couldn't find any skills or certifications on your resume, sorry"
